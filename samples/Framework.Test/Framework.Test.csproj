@@ -1,0 +1,69 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="15.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <Import Project="$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props" Condition="Exists('$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props')" />
+  <PropertyGroup>
+    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
+    <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
+    <ProjectGuid>{6C1B4C06-2E43-43EB-AEDC-38274C3DAD83}</ProjectGuid>
+    <OutputType>Exe</OutputType>
+    <RootNamespace>Framework.Test</RootNamespace>
+    <AssemblyName>Framework.Test</AssemblyName>
+    <TargetFrameworkVersion>v4.6.1</TargetFrameworkVersion>
+    <FileAlignment>512</FileAlignment>
+    <AutoGenerateBindingRedirects>true</AutoGenerateBindingRedirects>
+    <NuGetPackageImportStamp>
+    </NuGetPackageImportStamp>
+    <!-- Define the custom assembly info name with the copyright -->
+    <CopyrightYearAssemblyInfo>Properties\CustomAssemblyInfoName.cs</CopyrightYearAssemblyInfo>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
+    <PlatformTarget>AnyCPU</PlatformTarget>
+    <DebugSymbols>true</DebugSymbols>
+    <DebugType>full</DebugType>
+    <Optimize>false</Optimize>
+    <OutputPath>bin\Debug\</OutputPath>
+    <DefineConstants>DEBUG;TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
+    <PlatformTarget>AnyCPU</PlatformTarget>
+    <DebugType>pdbonly</DebugType>
+    <Optimize>true</Optimize>
+    <OutputPath>bin\Release\</OutputPath>
+    <DefineConstants>TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <ItemGroup>
+    <Reference Include="System" />
+    <Reference Include="System.Core" />
+    <Reference Include="System.Xml.Linq" />
+    <Reference Include="System.Data.DataSetExtensions" />
+    <Reference Include="Microsoft.CSharp" />
+    <Reference Include="System.Data" />
+    <Reference Include="System.Net.Http" />
+    <Reference Include="System.Xml" />
+    <Reference Include="TriggersTools.Build.BuildTime, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\..\packages\TriggersTools.Build.BuildTime.1.0.0\lib\net40\TriggersTools.Build.BuildTime.dll</HintPath>
+    </Reference>
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="Program.cs" />
+    <Compile Include="Properties\CustomAssemblyInfoName.cs" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="App.config" />
+    <None Include="packages.config" />
+  </ItemGroup>
+  <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
+  <Target Name="EnsureNuGetPackageBuildImports" BeforeTargets="PrepareForBuild">
+    <PropertyGroup>
+      <ErrorText>This project references NuGet package(s) that are missing on this computer. Use NuGet Package Restore to download them.  For more information, see http://go.microsoft.com/fwlink/?LinkID=322105. The missing file is {0}.</ErrorText>
+    </PropertyGroup>
+    <Error Condition="!Exists('..\..\packages\TriggersTools.Build.BuildTime.1.0.0\build\TriggersTools.Build.BuildTime.targets')" Text="$([System.String]::Format('$(ErrorText)', '..\..\packages\TriggersTools.Build.BuildTime.1.0.0\build\TriggersTools.Build.BuildTime.targets'))" />
+    <Error Condition="!Exists('..\..\packages\TriggersTools.Build.CopyrightYear.1.0.0\build\TriggersTools.Build.CopyrightYear.targets')" Text="$([System.String]::Format('$(ErrorText)', '..\..\packages\TriggersTools.Build.CopyrightYear.1.0.0\build\TriggersTools.Build.CopyrightYear.targets'))" />
+  </Target>
+  <Import Project="..\..\packages\TriggersTools.Build.BuildTime.1.0.0\build\TriggersTools.Build.BuildTime.targets" Condition="Exists('..\..\packages\TriggersTools.Build.BuildTime.1.0.0\build\TriggersTools.Build.BuildTime.targets')" />
+  <Import Project="..\..\packages\TriggersTools.Build.CopyrightYear.1.0.0\build\TriggersTools.Build.CopyrightYear.targets" Condition="Exists('..\..\packages\TriggersTools.Build.CopyrightYear.1.0.0\build\TriggersTools.Build.CopyrightYear.targets')" />
+</Project>

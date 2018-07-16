@@ -1,0 +1,6 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<!-- Create assembly information with AssemblyBuildTimeAttribute -->
+<Project>
+  <!-- Import the build .targets file since this one is no different -->
+  <Import Project="$(MSBuildThisFileDirectory)..\build\TriggersTools.Build.BuildTime.targets"/>
+</Project>

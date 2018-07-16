@@ -1,0 +1,53 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<!-- Modify the assembly's copyright year -->
+<Project TreatAsLocalProperty="TaskFolder;TaskAssembly;CopyrightYearOutput;CopyrightYearAssemblyInfoOutput;CopyrightYearAssemblyInfoNewOutput">
+  <!-- Get the output location of the task assembly -->
+  <PropertyGroup>
+    <TaskFolder Condition=" '$(MSBuildRuntimeType)' == 'Core' ">netstandard1.3</TaskFolder>
+    <TaskFolder Condition=" '$(MSBuildRuntimeType)' != 'Core' ">net46</TaskFolder>
+    <TaskAssembly>$(MSBuildThisFileDirectory)..\tasks\$(TaskFolder)\TriggersTools.Build.CopyrightYear.dll</TaskAssembly>
+  </PropertyGroup>
+
+  <!-- Create the CopyrightYear task -->
+  <UsingTask TaskName="TriggersTools.Build.CopyrightYear" AssemblyFile="$(TaskAssembly)"/>
+  <Target Name="TriggersToolsCopyrightYearAssign" BeforeTargets="BeforeBuild">
+    <Message Importance="normal" Text="Applying Copyright Year" />
+    
+    <!-- Define the output assembly path -->
+    <PropertyGroup>
+      <CopyrightYearAssemblyInfoOutput>$(IntermediateOutputPath)$(ProjectName).AssemblyInfo.Copyright.cs</CopyrightYearAssemblyInfoOutput>
+    </PropertyGroup>
+
+    <!-- Define the default Copyright year assembly info file to look for -->
+    <PropertyGroup Condition="'$(CopyrightYearAssemblyInfo)' == ''">
+      <CopyrightYearAssemblyInfo>Properties\AssemblyInfo.cs</CopyrightYearAssemblyInfo>
+    </PropertyGroup>
+
+    <!-- Make sure the directory exists -->
+    <!--<MakeDir Directories="$(ProjectDir)$(IntermediateOutputPath)" />-->
+    
+    <!-- Run the CopyrightYear task -->
+    <CopyrightYear ProjectDir="$(ProjectDir)"
+                   CopyrightInput="$(Copyright)"
+                   AssemblyInfoInput="$(CopyrightYearAssemblyInfo)"
+                   AssemblyInfoOutput="$(CopyrightYearAssemblyInfoOutput)">
+      <!-- Output the new copyright property -->
+      <Output TaskParameter="Copyright" PropertyName="CopyrightYearOutput" />
+      <!-- Output the new assembly info to be compiled -->
+      <Output TaskParameter="AssemblyInfo" PropertyName="CopyrightYearAssemblyInfoNewOutput" />
+    </CopyrightYear>
+
+
+    <!-- Modify the copyright property only if it was modified -->
+    <PropertyGroup Condition="'$(CopyrightYearOutput)' != ''">
+      <Copyright>$(CopyrightYearOutput)</Copyright>
+    </PropertyGroup>
+    
+    <!-- Include the assembly file if it was modified and exclude the old one -->
+    <ItemGroup Condition="'$(CopyrightYearAssemblyInfoNewOutput)' != ''">
+      <Compile Include="$(CopyrightYearAssemblyInfoNewOutput)" />
+      <!-- Don't compile the placeholder assembly info -->
+      <Compile Remove="$(CopyrightYearAssemblyInfo)" />
+    </ItemGroup>
+  </Target>
+</Project>

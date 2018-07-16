@@ -1,0 +1,32 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<!-- Create assembly information with AssemblyBuildTimeAttribute -->
+<Project TreatAsLocalProperty="AssemblyInfoFile;ExistingAssemblyInfo">
+  <!-- Assign the time before the build starts -->
+  <Target Name="TriggersToolsBuildTimeAssign" BeforeTargets="BeforeBuild">
+    <Message Importance="normal" Text="Generating Build Time" />
+    
+    <!-- Define the assembly info file to store the build time in -->
+    <PropertyGroup>
+      <AssemblyInfoOutput>$(IntermediateOutputPath)$(ProjectName).AssemblyInfo.BuildTime.cs</AssemblyInfoOutput>
+    </PropertyGroup>
+    
+    <ItemGroup>
+      <!-- Define the build time attribute to use with WriteCodeFragment -->
+      <AssemblyAttributes Include="TriggersTools.Build.AssemblyBuildTime">
+        <_Parameter1>$([System.DateTime]::UtcNow.ToString("yyyy'-'MM'-'dd'T'HH':'mm':'ss'.'fff'Z'"))</_Parameter1>
+      </AssemblyAttributes>
+
+      <!-- Check for existing build time assembly info files that are already included -->
+      <ExistingAssemblyInfo Include="@(Compile)" Condition="'%(Identity)' == '$(AssemblyInfoOutput)'" />
+    </ItemGroup>
+    
+    <!-- Make sure the directory exists -->
+    <MakeDir Directories="$(IntermediateOutputPath)" />
+
+    <!-- Write the assembly file with just the build time -->
+    <WriteCodeFragment Language="C#" OutputFile="$(AssemblyInfoOutput)" AssemblyAttributes="@(AssemblyAttributes)">
+      <!-- Only output this if the file is not already included, We don't want any errors -->
+      <Output TaskParameter="OutputFile" ItemName="Compile" Condition="'@(ExistingAssemblyInfo)' == ''" />
+    </WriteCodeFragment>
+  </Target>
+</Project>

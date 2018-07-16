@@ -1,0 +1,59 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <!-- Project info -->
+    <TargetFrameworks>netstandard1.3;net46</TargetFrameworks>
+    <AssemblyName>TriggersTools.Build.CopyrightYear</AssemblyName>
+    <RootNamespace>TriggersTools.Build</RootNamespace>
+    <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
+
+    <!-- Suppresses the warnings about the package not having assemblies in lib/*/.dll.-->
+    <NoPackageAnalysis>true</NoPackageAnalysis>
+    <!-- Change the default location where NuGet will put the build output -->
+    <BuildOutputTargetFolder>tasks</BuildOutputTargetFolder>
+  </PropertyGroup>
+
+  <PropertyGroup>
+    <!-- NuGet Package info -->
+    <PackageId>TriggersTools.Build.CopyrightYear</PackageId>
+    <Product>TriggersTools.Build.CopyrightYear</Product>
+    <Description>Replaces all instances of {YEAR} in copyrights with the current year. Works with the MSBuild Copyright property and AssemblyCopyright attribute.
+
+Assign the &lt;CopyrightYearAssemblyInfo&gt; property in your project file as your input assembly info file if you're using an one different from Properties\AssemblyInfo.cs.</Description>
+    <Authors>Robert Jordan</Authors>
+    <Company>Trigger's Tools &amp; Games</Company>
+    <Copyright>Copyright © Robert Jordan 2018</Copyright>
+    <PackageIconUrl>https://raw.githubusercontent.com/trigger-death/TriggersTools.Build/master/src/TriggersTools.Build.CopyrightYear/NuGetIcon.png</PackageIconUrl>
+    <PackageTags>msbuild target assembly copyright year</PackageTags>
+    <Version>1.0.0</Version>
+    <FileVersion>1.0.0.0</FileVersion>
+    <AssemblyVersion>1.0.0.0</AssemblyVersion>
+    <RepositoryUrl>https://github.com/trigger-death/TriggersTools.Build</RepositoryUrl>
+    <PackageProjectUrl>https://github.com/trigger-death/TriggersTools.Build</PackageProjectUrl>
+    <RepositoryType>git</RepositoryType>
+    <PackageLicenseUrl>https://github.com/trigger-death/TriggersTools.Build/blob/master/License.md</PackageLicenseUrl>
+    <PackageReleaseNotes>Initial release</PackageReleaseNotes>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <!-- NuGet Package references -->
+    <!--<PackageReference Include="Microsoft.Build.Framework" Version="15.7.179" />
+    <PackageReference Include="Microsoft.Build.Utilities.Core" />-->
+    <PackageReference Include="Microsoft.Build.Framework" Version="15.6.85" />
+    <PackageReference Include="Microsoft.Build.Utilities.Core" Version="15.6.85" />
+    <PackageReference Include="System.Xml.XDocument" Version="4.3.0" />
+    <PackageReference Include="System.Xml.XPath" Version="4.3.0" />
+    <PackageReference Include="System.Xml.XPath.XDocument" Version="4.3.0" />
+   <!-- <PackageReference Include="System.Xml.XPath.XDocument" />
+    <PackageReference Update="Microsoft.Build.Framework" Version="15.6.85" />
+    <PackageReference Update="Microsoft.Build.Utilities.Core" Version="15.6.85" />
+    <PackageReference Update="System.Xml.XPath.XDocument" Version="4.3.0" />-->
+    <PackageReference Update="@(PackageReference)" PrivateAssets="All" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <!-- Pack the .targets files -->
+    <Content Include="build\*" PackagePath="build\" />
+    <Content Include="buildMultiTargeting\*" PackagePath="buildMultiTargeting\" />
+  </ItemGroup>
+</Project>

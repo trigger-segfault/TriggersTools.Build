@@ -1,0 +1,16 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <OutputType>Exe</OutputType>
+    <TargetFramework>netcoreapp2.0</TargetFramework>
+    <Copyright>Copyright © Robert Jordan {YEAR}</Copyright>
+    <Company>Trigger's Tools &amp; Games</Company>
+    <Authors>Robert Jordan</Authors>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <PackageReference Include="TriggersTools.Build.BuildTime" Version="1.0.0" />
+    <PackageReference Include="TriggersTools.Build.CopyrightYear" Version="1.0.0" />
+  </ItemGroup>
+
+</Project>
