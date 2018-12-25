@@ -2,6 +2,8 @@
 
 A collection of .NET libraries for automated assignment and modification of assembly info, either through MSBuild property or assembly info file. Both are designed to begin working immediately after being installed as a NuGet package. Although `CopyrightYear` requires that the current year in the copyright information be replaced with `{YEAR}`.
 
+[![Discord](https://img.shields.io/discord/436949335947870238.svg?style=flat&logo=discord&label=chat&colorB=7389DC&link=https://discord.gg/vB7jUbY)](https://discord.gg/vB7jUbY)
+
 ***
 
 # BuildTime ![AppIcon](https://i.imgur.com/2hKtTYg.png)
