@@ -1,86 +1,137 @@
 ﻿using System;
+using System.IO;
 using System.Linq;
 using System.Reflection;
+using System.Text;
 
 namespace TriggersTools.Build {
-	/// <summary>Extensions for quickly accessing an assemby's build time.</summary>
+	/// <summary>
+	///  Extensions for quickly accessing an assemby's build time.
+	/// </summary>
 	public static class AssemblyBuildTimeExtensions {
+		#region Constants
+
+		/// <summary>
+		///  Gets the name of the build timestamp embedded resource used to store the build time.
+		/// </summary>
+		public const string TimestampResource = "TriggersTools.Build.Timestamp";
+
+		#endregion
 
 		#region HasBuildTime
 
-		/// <summary>Gets if the assembly has a <see cref="AssemblyBuildTimeAttribute"/>.</summary>
+		/// <summary>
+		///  Gets if the assembly has an embedded <see cref="TimestampResource"/>.
+		/// </summary>
 		/// 
 		/// <param name="assembly">The assembly to check.</param>
-		/// <returns>True if the assembly has a <see cref="AssemblyBuildTimeAttribute"/>.</returns>
+		/// <returns>True if the assembly has an embedded <see cref="TimestampResource"/>.</returns>
+		/// 
+		/// <exception cref="ArgumentNullException">
+		///  <paramref name="assembly"/> is null.
+		/// </exception>
 		public static bool HasBuildTime(this Assembly assembly) {
-			return assembly.GetAttribute() != null;
+			using (Stream stream = assembly.GetManifestResourceStream(TimestampResource)) {
+				return stream != null;
+			}
 		}
 
 		#endregion
 
 		#region GetBuildTime
 
-		/// <summary>Gets the Coordinate Universal build time of the assembly.</summary>
-		/// 
-		/// <param name="assembly">The assembly to get the build date for.</param>
+		/// <summary>
+		///  Gets the Coordinate Universal build time of the assembly.
+		/// </summary>
+		/// <param name="assembly">The assembly to get the build time for.</param>
 		/// <returns>
-		/// The Coordinate Universal build time. -or- <see cref="DateTime.MinValue"/> if no <see
-		/// cref="AssemblyBuildTimeAttribute"/> was present.
+		///  The Coordinate Universal build time.-or- <see cref="DateTime.MinValue"/> if no embedded
+		///  <see cref="TimestampResource"/> was present.
 		/// </returns>
+		/// 
+		/// <exception cref="ArgumentNullException">
+		///  <paramref name="assembly"/> is null.
+		/// </exception>
+		/// <exception cref="FormatException">
+		///  The embedded <see cref="TimestampResource"/> is corrupt.
+		/// </exception>
 		public static DateTime GetUtcBuildTime(this Assembly assembly) {
-			return assembly.GetAttribute()?.UtcBuildTime ?? DateTime.MinValue;
+			if (assembly == null)
+				throw new ArgumentNullException(nameof(assembly));
+			using (Stream stream = assembly.GetManifestResourceStream(TimestampResource)) {
+				if (stream == null)
+					return DateTime.MinValue;
+				using (StreamReader reader = new StreamReader(stream))
+					return DateTime.Parse(reader.ReadToEnd()).ToUniversalTime();
+			}
 		}
-
-		/// <summary>Gets the local build time of the assembly.</summary>
-		/// 
-		/// <param name="assembly">The assembly to get the build date for.</param>
+		/// <summary>
+		///  Gets the local build time of the assembly.
+		/// </summary>
+		/// <param name="assembly">The assembly to get the build time for.</param>
 		/// <returns>
-		/// The local build time. -or- <see cref="DateTime.MinValue"/> if no <see cref=
-		/// "AssemblyBuildTimeAttribute"/> was present.
+		///  The local build time.-or- <see cref="DateTime.MinValue"/> if no embedded <see cref="TimestampResource"/>
+		///  was present.
 		/// </returns>
+		/// 
+		/// <exception cref="ArgumentNullException">
+		///  <paramref name="assembly"/> is null.
+		/// </exception>
+		/// <exception cref="FormatException">
+		///  The embedded <see cref="TimestampResource"/> is corrupt.
+		/// </exception>
 		public static DateTime GetBuildTime(this Assembly assembly) {
-			return assembly.GetAttribute()?.BuildTime ?? DateTime.MinValue;
+			DateTime date = assembly.GetUtcBuildTime();
+			if (date != DateTime.MinValue)
+				date = date.ToLocalTime();
+			return date;
 		}
 
 		#endregion
 
 		#region GetBuildDate
 
-		/// <summary>Gets the Coordinate Universal build date of the assembly.</summary>
-		/// 
+		/// <summary>
+		///  Gets the Coordinate Universal build date of the assembly.
+		/// </summary>
 		/// <param name="assembly">The assembly to get the build date for.</param>
 		/// <returns>
-		/// The Coordinate Universal build date. -or- <see cref="DateTime.MinValue"/> if no <see
-		/// cref="AssemblyBuildTimeAttribute"/> was present.
+		///  The Coordinate Universal build date.-or- <see cref="DateTime.MinValue"/> if no embedded
+		///  <see cref="TimestampResource"/> was present.
 		/// </returns>
+		/// 
+		/// <exception cref="ArgumentNullException">
+		///  <paramref name="assembly"/> is null.
+		/// </exception>
+		/// <exception cref="FormatException">
+		///  The embedded <see cref="TimestampResource"/> is corrupt.
+		/// </exception>
 		public static DateTime GetUtcBuildDate(this Assembly assembly) {
-			return assembly.GetAttribute()?.UtcBuildDate ?? DateTime.MinValue;
+			DateTime date = assembly.GetUtcBuildTime();
+			if (date != DateTime.MinValue)
+				date = date.Date;
+			return date;
 		}
-
-		/// <summary>Gets the local build date of the assembly.</summary>
-		/// 
+		/// <summary>
+		///  Gets the local build date of the assembly.
+		/// </summary>
 		/// <param name="assembly">The assembly to get the build date for.</param>
 		/// <returns>
-		/// The local build date. -or- <see cref="DateTime.MinValue"/> if no <see cref=
-		/// "AssemblyBuildTimeAttribute"/> was present.
+		///  The local build date.-or- <see cref="DateTime.MinValue"/> if no embedded <see cref="TimestampResource"/>
+		///  was present.
 		/// </returns>
+		/// 
+		/// <exception cref="ArgumentNullException">
+		///  <paramref name="assembly"/> is null.
+		/// </exception>
+		/// <exception cref="FormatException">
+		///  The embedded <see cref="TimestampResource"/> is corrupt.
+		/// </exception>
 		public static DateTime GetBuildDate(this Assembly assembly) {
-			return assembly.GetAttribute()?.BuildDate ?? DateTime.MinValue;
-		}
-
-		#endregion
-
-		#region Private
-
-		/// <summary>Gets the <see cref="AssemblyBuildTimeAttribute"/> from the assembly.</summary>
-		private static AssemblyBuildTimeAttribute GetAttribute(this Assembly assembly) {
-#if NET40
-			return assembly.GetCustomAttributes(typeof(AssemblyBuildTimeAttribute), true)
-				.FirstOrDefault() as AssemblyBuildTimeAttribute;
-#else
-			return assembly.GetCustomAttributes(typeof(AssemblyBuildTimeAttribute))
-				.FirstOrDefault() as AssemblyBuildTimeAttribute;
-#endif
+			DateTime date = assembly.GetBuildTime();
+			if (date != DateTime.MinValue)
+				date = date.ToLocalTime().Date;
+			return date;
 		}
 
 		#endregion

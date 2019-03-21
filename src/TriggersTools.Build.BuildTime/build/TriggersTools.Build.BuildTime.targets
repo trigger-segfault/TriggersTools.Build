@@ -1,32 +1,55 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
-<!-- Create assembly information with AssemblyBuildTimeAttribute -->
-<Project TreatAsLocalProperty="AssemblyInfoFile;ExistingAssemblyInfo">
-  <!-- Assign the time before the build starts -->
-  <Target Name="TriggersToolsBuildTimeAssign" BeforeTargets="BeforeBuild">
-    <Message Importance="normal" Text="Generating Build Time" />
-    
-    <!-- Define the assembly info file to store the build time in -->
-    <PropertyGroup>
-      <AssemblyInfoOutput>$(IntermediateOutputPath)$(ProjectName).AssemblyInfo.BuildTime.cs</AssemblyInfoOutput>
-    </PropertyGroup>
-    
-    <ItemGroup>
-      <!-- Define the build time attribute to use with WriteCodeFragment -->
-      <AssemblyAttributes Include="TriggersTools.Build.AssemblyBuildTime">
-        <_Parameter1>$([System.DateTime]::UtcNow.ToString("yyyy'-'MM'-'dd'T'HH':'mm':'ss'.'fff'Z'"))</_Parameter1>
-      </AssemblyAttributes>
+<!-- Embed a resource with the ISO 8601 datetime in plaintext during build -->
+<Project TreatAsLocalProperty="TimestampFile;TimestampDir;TargetProperties;TargetFile">
 
-      <!-- Check for existing build time assembly info files that are already included -->
-      <ExistingAssemblyInfo Include="@(Compile)" Condition="'%(Identity)' == '$(AssemblyInfoOutput)'" />
-    </ItemGroup>
-    
-    <!-- Make sure the directory exists -->
-    <MakeDir Directories="$(IntermediateOutputPath)" />
+  <!-- Assign a path to the timestamp file -->
+  <ItemGroup>
+    <TimestampFile Include="$(BaseIntermediateOutputPath)TriggersTools.Build.Timestamp.tmp" />
+  </ItemGroup>
 
-    <!-- Write the assembly file with just the build time -->
-    <WriteCodeFragment Language="C#" OutputFile="$(AssemblyInfoOutput)" AssemblyAttributes="@(AssemblyAttributes)">
-      <!-- Only output this if the file is not already included, We don't want any errors -->
-      <Output TaskParameter="OutputFile" ItemName="Compile" Condition="'@(ExistingAssemblyInfo)' == ''" />
-    </WriteCodeFragment>
+  <!-- Create the timestamp ONCE before build starts -->
+  <Target Name="TriggersToolsBuildCreateTimestamp" Outputs="@(TimestampFile)">
+    <Message Text="Building timestamp..." Importance="high" />
+    <!--<Message Text="Timestamp: @(TimestampFile)" Importance="low" />-->
+
+    <!-- Make sure the timestamp file exists so that it can be written to -->
+    <Touch AlwaysCreate="true" Files="@(TimestampFile)" />
+
+    <!-- Write the ISO 8601 datetime to the timestamp file in UTC -->
+    <WriteLinesToFile File="@(TimestampFile)" Lines="$([System.DateTime]::UtcNow.ToString(&quot;o&quot;))" Overwrite="true" />
   </Target>
+
+  <!-- Guarantee that TriggersToolsBuildCreateTimestamp is only run once -->
+  <Target Name="TriggersToolsBuildCreateTimestampRunOnce" BeforeTargets="DispatchToInnerBuilds;BeforeBuild" Outputs="@(TimestampFile)">
+    <!-- https://github.com/Microsoft/msbuild/issues/2781#issuecomment-350118208 -->
+    <!--
+         BeforeBuild guarantees that this runs on old project formats
+         TargetFramework=once is critical here, as it will allow to not execute task from same project with
+         same properties twice.  We need to unify TargetFramework between multiple target frameworks when desired.
+         Make sure we pass BaseIntermediateOutputPath property so we can set the directory for the timestamp.
+    -->
+    <PropertyGroup>
+      <!-- Get the full path because it's not guaranteed to be absolute -->
+      <TimestampDir>$([System.IO.Path]::GetFullPath('$(BaseIntermediateOutputPath)'))</TimestampDir>
+      <TargetProperties>TargetFramework=once;BaseIntermediateOutputPath=$(TimestampDir)</TargetProperties>
+      <!-- We need the full path to this target file -->
+      <TargetFile>$(MSBuildThisFileDirectory)$(MSBuildThisFile)</TargetFile>
+    </PropertyGroup>
+
+    <MSBuild Projects="$(TargetFile)" Targets="TriggersToolsBuildCreateTimestamp" Properties="$(TargetProperties)" />
+  </Target>
+
+  <!-- Include the timestamp in EmbeddedResource for each build -->
+  <Target Name="TriggersToolsBuildEmbedTimestamp" BeforeTargets="BeforeBuild">
+    <Message Text="Embedding Timestamp: @(TimestampFile)" Importance="low" />
+
+    <!-- Add the timestamp file to the embedded resources -->
+    <ItemGroup>
+      <EmbeddedResource Include="@(TimestampFile)">
+        <!-- Use a logical name so we don't need to know the namespace of the project -->
+        <LogicalName>%(Filename)</LogicalName>
+      </EmbeddedResource>
+    </ItemGroup>
+  </Target>
+ 
 </Project>

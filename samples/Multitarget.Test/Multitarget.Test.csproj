@@ -1,4 +1,4 @@
-<Project Sdk="Microsoft.NET.Sdk">
+﻿<Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
     <OutputType>Exe</OutputType>
@@ -9,8 +9,8 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <PackageReference Include="TriggersTools.Build.BuildTime" Version="1.0.0" />
-    <PackageReference Include="TriggersTools.Build.CopyrightYear" Version="1.0.0" />
+    <PackageReference Include="TriggersTools.Build.BuildTime" Version="2.0.0" />
+    <PackageReference Include="TriggersTools.Build.CopyrightYear" Version="1.0.2" />
   </ItemGroup>
 
 </Project>

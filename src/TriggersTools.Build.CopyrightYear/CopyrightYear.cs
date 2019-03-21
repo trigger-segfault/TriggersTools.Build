@@ -6,37 +6,47 @@ using System.Reflection;
 using System.Text.RegularExpressions;
 
 namespace TriggersTools.Build {
-	/// <summary>A task to update the copyright's year.</summary>
+	/// <summary>
+	///  A task to update the copyright's year.
+	/// </summary>
 	public class CopyrightYear : Task {
-
 		#region Patterns
 
-		/// <summary>The base regex pattern for the year token.</summary>
+		/// <summary>
+		///  The base regex pattern for the year token.
+		/// </summary>
 		private const string YearToken = "{YEAR}";
-
-		/// <summary>The regex pattern for the assembly info file's copyright.</summary>
+		/// <summary>
+		///  The regex pattern for the assembly info file's copyright.
+		/// </summary>
 		private const string AssemblyCopyrightPattern =
 			@"\s*(?:System\.Reflection\.)?AssemblyCopyright\s*\(\s*\$?@?""(?'copyright'.*)""\s*\)\s*";
-
-		/// <summary>The regex pattern for C# assembly info files.</summary>
+		/// <summary>
+		///  The regex pattern for C# assembly info files.
+		/// </summary>
 		private const string AssemblyInfoCSPattern =
 			@"\[\s*assembly:" + AssemblyCopyrightPattern + @"\]";
-
-		/// <summary>The regex pattern for F# assembly info files.</summary>
+		/// <summary>
+		///  The regex pattern for F# assembly info files.
+		/// </summary>
 		private const string AssemblyInfoFSPattern =
 			@"\[<\s*assembly:" + AssemblyCopyrightPattern + @">\]";
-
-		/// <summary>The regex pattern for Visual Basic assembly info files.</summary>
+		/// <summary>
+		///  The regex pattern for Visual Basic assembly info files.
+		/// </summary>
 		private const string AssemblyInfoVBPattern =
 			@"<\s*Assembly:" + AssemblyCopyrightPattern + @">";
-
-		/// <summary>The regex pattern for C#, F#, and Visual Basic assembly info files.</summary>
+		/// <summary>
+		///  The regex pattern for C#, F#, and Visual Basic assembly info files.
+		/// </summary>
 		private const string AssemblyInfoPattern =
 			@"^\s*(?:" + AssemblyInfoCSPattern + "|" +
 						 AssemblyInfoFSPattern + "|" +
 						 AssemblyInfoVBPattern + @")\s*$";
 
-		/// <summary>The regex for C# assembly info files.</summary>
+		/// <summary>
+		///  The regex for C# assembly info files.
+		/// </summary>
 		private Regex AssemblyInfoRegex => new Regex(AssemblyInfoPattern, RegexOptions.Multiline);
 
 		#endregion
@@ -44,22 +54,34 @@ namespace TriggersTools.Build {
 		#region Settings
 		
 		[Required]
-		/// <summary>The path of the project directory.</summary>
+		/// <summary>
+		///  The path of the project directory.
+		/// </summary>
 		public string ProjectDir { get; set; }
 		//[Required]
-		/// <summary>The input copyright property.</summary>
+		/// <summary>
+		///  The input copyright property.
+		/// </summary>
 		public string CopyrightInput { get; set; }
 		//[Required]
-		/// <summary>The input assembly info file path with the copyright.</summary>
+		/// <summary>
+		///  The input assembly info file path with the copyright.
+		/// </summary>
 		public string AssemblyInfoInput { get; set; }
 		//[Required]
-		/// <summary>The output assembly info file path with the copyright.</summary>
+		/// <summary>
+		///  The output assembly info file path with the copyright.
+		/// </summary>
 		public string AssemblyInfoOutput { get; set; }
 
-		/// <summary>The output copyright property.</summary>
+		/// <summary>
+		///  The output copyright property.
+		/// </summary>
 		[Output]
 		public ITaskItem Copyright { get; set; }
-		/// <summary>The output assembly info file with the copyright.</summary>
+		/// <summary>
+		///  The output assembly info file with the copyright.
+		/// </summary>
 		[Output]
 		public ITaskItem AssemblyInfo { get; set; }
 
@@ -67,8 +89,9 @@ namespace TriggersTools.Build {
 
 		#region Execute
 
-		/// <summary>Executes the task to update the copyright's year.</summary>
-		/// 
+		/// <summary>
+		///  Executes the task to update the copyright's year.
+		/// </summary>
 		/// <returns>True if the task succeeds.</returns>
 		public override bool Execute() {
 			Log.LogMessage(MessageImportance.Normal, "Applying Copyright Year");
@@ -110,9 +133,8 @@ namespace TriggersTools.Build {
 		}
 
 		/// <summary>
-		/// Replaces the copyright year in an assembly info file and writes a new file.
+		///  Replaces the copyright year in an assembly info file and writes a new file.
 		/// </summary>
-		/// 
 		/// <param name="year">The year to replace with.</param>
 		private void ReplaceAssemblyInfo(string year, ref bool found) {
 			string file = AssemblyInfoInput;
@@ -153,8 +175,9 @@ namespace TriggersTools.Build {
 			AssemblyInfo = new TaskItem(outFile);
 		}
 
-		/// <summary>Replaces the copyright year in a property.</summary>
-		/// 
+		/// <summary>
+		///  Replaces the copyright year in a property.
+		/// </summary>
 		/// <param name="year">The year to replace with.</param>
 		private void ReplaceProperty(string year, ref bool found) {
 			string copyright = CopyrightInput;
@@ -179,17 +202,18 @@ namespace TriggersTools.Build {
 
 		#region Helpers
 		
-		/// <summary>Replaces the group match with the specified string.</summary>
-		/// 
+		/// <summary>
+		///  Replaces the group match with the specified string.
+		/// </summary>
 		/// <param name="group">The group to replace.</param>
 		/// <param name="input">The string to replace.</param>
 		/// <param name="value">The value to replace the group with.</param>
 		/// <returns>The replaced string.</returns>
 		/// 
 		/// <exception cref="ArgumentNullException">
-		/// <paramref name="input"/>, or <paramref name="value"/> is null.
+		///  <paramref name="input"/>, or <paramref name="value"/> is null.
 		/// </exception>
-		public static string ReplaceGroup(Group group, string input, string value) {
+		private static string ReplaceGroup(Group group, string input, string value) {
 			if (!group.Success)
 				return input;
 			input = input.Remove(group.Index, group.Length);

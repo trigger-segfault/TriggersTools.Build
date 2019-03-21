@@ -11,7 +11,9 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Framework.Test", "samples\F
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Core.Test", "samples\Core.Test\Core.Test.csproj", "{CB06D000-D363-4CDB-B32D-33DA7779B0CE}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Multitarget.Test", "samples\Multitarget.Test\Multitarget.Test.csproj", "{1DD7E8F8-FEC2-465E-B239-D5169747B455}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Multitarget.Test", "samples\Multitarget.Test\Multitarget.Test.csproj", "{1DD7E8F8-FEC2-465E-B239-D5169747B455}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Samples", "Samples", "{3542D412-77B9-4E95-B1A2-DD013E25197E}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -42,6 +44,11 @@ Global
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(NestedProjects) = preSolution
+		{6C1B4C06-2E43-43EB-AEDC-38274C3DAD83} = {3542D412-77B9-4E95-B1A2-DD013E25197E}
+		{CB06D000-D363-4CDB-B32D-33DA7779B0CE} = {3542D412-77B9-4E95-B1A2-DD013E25197E}
+		{1DD7E8F8-FEC2-465E-B239-D5169747B455} = {3542D412-77B9-4E95-B1A2-DD013E25197E}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {EAD389E4-F33C-473D-81F6-D3CA4C304735}

@@ -1,4 +1,4 @@
-<Project Sdk="Microsoft.NET.Sdk">
+﻿<Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
     <!-- Project info -->
@@ -6,26 +6,27 @@
     <AssemblyName>TriggersTools.Build.BuildTime</AssemblyName>
     <RootNamespace>TriggersTools.Build</RootNamespace>
     <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
+    <DocumentationFile>bin\$(Configuration)\$(TargetFramework)\$(AssemblyName).xml</DocumentationFile>
   </PropertyGroup>
 
   <PropertyGroup>
     <!-- NuGet Package info -->
     <PackageId>TriggersTools.Build.BuildTime</PackageId>
     <Product>TriggersTools.Build.BuildTime</Product>
-    <Description>Automatically assigns an AssemblyBuildTimeAttribute to the assembly during build-time. Build time can be aquired through extension methods such as Assembly.GetBuildTime().</Description>
+    <Description>Automatically embeds a resource containing the build timestamp into the assembly during build-time. Build time can be aquired through extension methods such as Assembly.GetBuildTime().</Description>
     <Authors>Robert Jordan</Authors>
     <Company>Trigger's Tools &amp; Games</Company>
-    <Copyright>Copyright © Robert Jordan 2018</Copyright>
+    <Copyright>Copyright © Robert Jordan $([System.DateTime]::Now.Year)</Copyright>
     <PackageIconUrl>https://raw.githubusercontent.com/trigger-death/TriggersTools.Build/master/src/TriggersTools.Build.BuildTime/NuGetIcon.png</PackageIconUrl>
-    <PackageTags>msbuild target assembly build time attribute</PackageTags>
-    <Version>1.0.0</Version>
-    <FileVersion>1.0.0.0</FileVersion>
-    <AssemblyVersion>1.0.0.0</AssemblyVersion>
+    <PackageTags>msbuild target assembly build time embedded resource</PackageTags>
+    <Version>2.0.0</Version>
+    <FileVersion>2.0.0.0</FileVersion>
+    <AssemblyVersion>2.0.0.0</AssemblyVersion>
     <PackageLicenseUrl>https://github.com/trigger-death/TriggersTools.Build/blob/master/License.md</PackageLicenseUrl>
     <RepositoryType>git</RepositoryType>
     <PackageProjectUrl>https://github.com/trigger-death/TriggersTools.Build</PackageProjectUrl>
     <RepositoryUrl>https://github.com/trigger-death/TriggersTools.Build</RepositoryUrl>
-    <PackageReleaseNotes>Initial release</PackageReleaseNotes>
+    <PackageReleaseNotes>No more build time attribute, meaning this assembly does not need to be loaded immediately for the parent assembly to load.</PackageReleaseNotes>
   </PropertyGroup>
 
   <ItemGroup>
