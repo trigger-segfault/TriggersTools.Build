@@ -1,10 +1,12 @@
-# TriggersTools.Build ![AppIcon](https://i.imgur.com/MCwbifB.png)
+# TriggersTools.Build ![AppIcon](https://i.imgur.com/OEEDtge.png)
 
 A collection of .NET libraries for automated assignment and modification of assembly info, either through MSBuild property or assembly info file. Both are designed to begin working immediately after being installed as a NuGet package. Although `CopyrightYear` requires that the current year in the copyright information be replaced with `{YEAR}`.
 
+[![Discord](https://img.shields.io/discord/436949335947870238.svg?style=flat&logo=discord&label=chat&colorB=7389DC&link=https://discord.gg/vB7jUbY)](https://discord.gg/vB7jUbY)
+
 ***
 
-# BuildTime ![AppIcon](https://i.imgur.com/BdsYmlT.png)
+# BuildTime ![AppIcon](https://i.imgur.com/2hKtTYg.png)
 
 [![NuGet Version](https://img.shields.io/nuget/v/TriggersTools.Build.BuildTime.svg?style=flat)](https://www.nuget.org/packages/TriggersTools.Build.BuildTime/)
 [![NuGet Downloads](https://img.shields.io/nuget/dt/TriggersTools.Build.BuildTime.svg?style=flat)](https://www.nuget.org/packages/TriggersTools.Build.BuildTime/)
@@ -14,7 +16,7 @@ Automatically assigns an `AssemblyBuildTimeAttribute` to the assembly during the
 
 You can check if an assembly has an `AssemblyBuildTimeAttribute` by calling the extension method `Assembly.HasBuildTime()`.
 
-# CopyrightYear ![AppIcon](https://i.imgur.com/CHebVZ8.png)
+# CopyrightYear ![AppIcon](https://i.imgur.com/YxSBdo7.png)
 
 [![NuGet Version](https://img.shields.io/nuget/v/TriggersTools.Build.CopyrightYear.svg?style=flat)](https://www.nuget.org/packages/TriggersTools.Build.CopyrightYear/)
 [![NuGet Downloads](https://img.shields.io/nuget/dt/TriggersTools.Build.CopyrightYear.svg?style=flat)](https://www.nuget.org/packages/TriggersTools.Build.CopyrightYear/)
